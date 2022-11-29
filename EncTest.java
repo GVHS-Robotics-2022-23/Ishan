@@ -71,10 +71,13 @@ public class EncTest extends LinearOpMode
         waitForStart();
         Clawmovement(200, EncTest.robotMotion.closeClaw, 0.45);
         sleep(100);
-        linearup(27,0.6);
+        linearup(2,0.6);
         movementFB(robotMotion.forward, 12, 0.5);
+        linearup(25,0.6);
         lineardown(26.5,-0.6);
         Clawmovement(200, EncTest.robotMotion.openClaw, 0);
+        linearup(2,0.5);
+        movementRL(robotMotion.right, 90, 0.5);
         BR.setPower(0);
         FR.setPower(0);
         BL.setPower(0);
@@ -152,15 +155,15 @@ public class EncTest extends LinearOpMode
         }
     }
 
-    private void movementRL(robotMotion action, double inch,  double power)
+    private void movementRL(robotMotion action, double degree,  double power)
     {
         if(action == robotMotion.left)
         {
             //Sets new position for motors
-            FL.setTargetPosition((int) ( FL.getCurrentPosition() - (inch*cpi)));
-            FR.setTargetPosition((int) ( FR.getCurrentPosition() + (inch*cpi)));
-            BL.setTargetPosition((int) ( BL.getCurrentPosition() - (inch*cpi)));
-            BR.setTargetPosition((int) ( BR.getCurrentPosition() + (inch*cpi)));
+            FL.setTargetPosition((int) ( FL.getCurrentPosition() - (degree*cpd)));
+            FR.setTargetPosition((int) ( FR.getCurrentPosition() + (degree*cpd)));
+            BL.setTargetPosition((int) ( BL.getCurrentPosition() - (degree*cpd)));
+            BR.setTargetPosition((int) ( BR.getCurrentPosition() + (degree*cpd)));
 
             //Sets desired power for motors
             FL.setPower(-power);
@@ -189,10 +192,10 @@ public class EncTest extends LinearOpMode
         else if (action == robotMotion.right)
         {
             //Sets new position for motors
-            FL.setTargetPosition((int) ( FL.getCurrentPosition() + (inch*cpi)));
-            FR.setTargetPosition((int) ( FR.getCurrentPosition() - (inch*cpi)));
-            BL.setTargetPosition((int) ( BL.getCurrentPosition() + (inch*cpi)));
-            BR.setTargetPosition((int) ( BR.getCurrentPosition() - (inch*cpi)));
+            FL.setTargetPosition((int) ( FL.getCurrentPosition() + (degree*cpd)));
+            FR.setTargetPosition((int) ( FR.getCurrentPosition() - (degree*cpd)));
+            BL.setTargetPosition((int) ( BL.getCurrentPosition() + (degree*cpd)));
+            BR.setTargetPosition((int) ( BR.getCurrentPosition() - (degree*cpd)));
 
             //Sets desired power for motors
             FL.setPower(power);
@@ -230,7 +233,7 @@ public class EncTest extends LinearOpMode
         {
 
         }
-        linear.setPower(0);
+        linear.setPower(0.1);
     }
     private void lineardown(double inch, double power)
     {
