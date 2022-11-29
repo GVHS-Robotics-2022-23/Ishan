@@ -74,7 +74,7 @@ public class EncTest extends LinearOpMode
         linearup(2,0.6);
         movementFB(robotMotion.forward, 12, 0.5);
         linearup(25,0.6);
-        lineardown(26.5,-0.6);
+        lineardown(1.9,-0.6);
         Clawmovement(200, EncTest.robotMotion.openClaw, 0);
         linearup(2,0.5);
         movementRL(robotMotion.right, 90, 0.5);
@@ -112,7 +112,12 @@ public class EncTest extends LinearOpMode
             //Loop to run encoders method
             while (FL.isBusy() && FR.isBusy() && BL.isBusy() && BR.isBusy())
             {
-
+//                telemetry.addLine("Move Forward");
+//                telemetry.addData("Target", "%7d :%7d : %7d : %7d", FL, FR, BL, BR);
+//                telemetry.addData("Actual", "%7d :%7d : %7d : %7d", FL.getCurrentPosition(),
+//                        FR.getCurrentPosition(), BL.getCurrentPosition(),
+//                        BR.getCurrentPosition());
+//                telemetry.update();
             }
 
             //Stop motors
@@ -120,6 +125,13 @@ public class EncTest extends LinearOpMode
             FR.setPower(0);
             BL.setPower(0);
             BR.setPower(0);
+
+            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         }
         else if (action == robotMotion.backward)
         {
@@ -152,6 +164,12 @@ public class EncTest extends LinearOpMode
             FR.setPower(0);
             BL.setPower(0);
             BR.setPower(0);
+
+            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
@@ -188,6 +206,12 @@ public class EncTest extends LinearOpMode
             FR.setPower(0);
             BL.setPower(0);
             BR.setPower(0);
+
+            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         else if (action == robotMotion.right)
         {
@@ -220,6 +244,12 @@ public class EncTest extends LinearOpMode
             FR.setPower(0);
             BL.setPower(0);
             BR.setPower(0);
+
+            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
@@ -234,6 +264,12 @@ public class EncTest extends LinearOpMode
 
         }
         linear.setPower(0.1);
+
+        FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     private void lineardown(double inch, double power)
     {
@@ -245,6 +281,12 @@ public class EncTest extends LinearOpMode
 
         }
         linear.setPower(0);
+
+        FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     private void Clawmovement(int Sleep, robotMotion action, double position)
