@@ -9,16 +9,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-public class EncTest extends LinearOpMode
+public class UpTwelve extends LinearOpMode
 {
     public DcMotor BR, BL, FR, FL,linear;
     public Servo claw;
 
     //clicks per degree
     double cpd = 21.94;
-
     //clicks per inch
-    double cpi = 87.5;
+    double cpi = 7.5;
+    double lcpi = 68;
 
     public enum robotMotion
     {
@@ -35,31 +35,31 @@ public class EncTest extends LinearOpMode
         linear = hardwareMap.get(DcMotor.class, "L");
         claw = hardwareMap.get(Servo.class, "c");
 
-        BR.setDirection(DcMotorSimple.Direction.FORWARD);
-        FR.setDirection(DcMotorSimple.Direction.FORWARD);
-        BL.setDirection(DcMotorSimple.Direction.REVERSE);
-        FL.setDirection(DcMotorSimple.Direction.REVERSE);
+        BR.setDirection(DcMotorSimple.Direction.REVERSE);
+        FR.setDirection(DcMotorSimple.Direction.REVERSE);
+        BL.setDirection(DcMotorSimple.Direction.FORWARD);
+        FL.setDirection(DcMotorSimple.Direction.FORWARD);
         linear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //  BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //  FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //  FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         linear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //   linear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         BR.setPower(0);
         FR.setPower(0);
@@ -69,15 +69,12 @@ public class EncTest extends LinearOpMode
         claw.setPosition(0);
 
         waitForStart();
-        Clawmovement(200, EncTest.robotMotion.closeClaw, 0.45);
-        sleep(100);
-        linearup(2,0.6);
-        movementFB(robotMotion.forward, 12, 0.5);
-        linearup(25,0.6);
-        lineardown(1.9,-0.6);
-        Clawmovement(200, EncTest.robotMotion.openClaw, 0);
-        linearup(2,0.5);
-        movementRL(robotMotion.right, 90, 0.5);
+//        Clawmovement(200, EncTest.robotMotion.closeClaw, 0.45);
+//        sleep(100);
+//        linearup(12,0.6);
+//        sleep(1000);
+//        lineardown(12,0.5);
+        forward(10, 0.4);
         BR.setPower(0);
         FR.setPower(0);
         BL.setPower(0);
@@ -87,91 +84,89 @@ public class EncTest extends LinearOpMode
     }
 
 
-    private void movementFB(robotMotion action, double inch,  double power)
+    private void forward(double inch,  double power)
     {
-        if(action == robotMotion.forward)
+
+        //Sets new position for motors
+        int a = (int) (FL.getCurrentPosition() + (inch*cpi));
+        int b = (int) (FR.getCurrentPosition() + (inch*cpi));
+        int c = (int) (BL.getCurrentPosition() + (inch*cpi));
+        int d = (int) (BR.getCurrentPosition() + (inch*cpi));
+
+        FL.setTargetPosition(a);
+        FR.setTargetPosition(b);
+        BL.setTargetPosition(c);
+        BR.setTargetPosition(d);
+
+        //Sets desired power for motors
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        BR.setPower(power);
+
+        //Makes the motors to run to the position
+        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Loop to run encoders method
+        while (FL.isBusy() && FR.isBusy() && BL.isBusy() && BR.isBusy())
         {
-            //Sets new position for motors
-            FL.setTargetPosition((int) ( FL.getCurrentPosition() + (inch*cpi)));
-            FR.setTargetPosition((int) ( FR.getCurrentPosition() + (inch*cpi)));
-            BL.setTargetPosition((int) ( BL.getCurrentPosition() + (inch*cpi)));
-            BR.setTargetPosition((int) ( BR.getCurrentPosition() + (inch*cpi)));
-
-            //Sets desired power for motors
-            FL.setPower(power);
-            FR.setPower(power);
-            BL.setPower(power);
-            FL.setPower(power);
-
-            //Makes the motors to run to the position
-            FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            //Loop to run encoders method
-            while (FL.isBusy() && FR.isBusy() && BL.isBusy() && BR.isBusy())
-            {
-//                telemetry.addLine("Move Forward");
-//                telemetry.addData("Target", "%7d :%7d : %7d : %7d", FL, FR, BL, BR);
-//                telemetry.addData("Actual", "%7d :%7d : %7d : %7d", FL.getCurrentPosition(),
-//                        FR.getCurrentPosition(), BL.getCurrentPosition(),
-//                        BR.getCurrentPosition());
-//                telemetry.update();
-            }
-
-            //Stop motors
-            FL.setPower(0);
-            FR.setPower(0);
-            BL.setPower(0);
-            BR.setPower(0);
-
-            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+            telemetry.addLine("Move Forward");
+            telemetry.addData("Target", "%7d :%7d : %7d : %7d", a, b, c, d);
+            telemetry.addData("Actual", "%7d :%7d : %7d : %7d", FL.getCurrentPosition(), FR.getCurrentPosition(), BL.getCurrentPosition(), BR.getCurrentPosition());
+            telemetry.update();
         }
-        else if (action == robotMotion.backward)
-        {
-            //Sets new position for motors
-            FL.setTargetPosition((int) ( FL.getCurrentPosition() - (inch*cpi)));
-            FR.setTargetPosition((int) ( FR.getCurrentPosition() - (inch*cpi)));
-            BL.setTargetPosition((int) ( BL.getCurrentPosition() - (inch*cpi)));
-            BR.setTargetPosition((int) ( BR.getCurrentPosition() - (inch*cpi)));
 
-            //Sets desired power for motors
-            FL.setPower(power);
-            FR.setPower(power);
-            BL.setPower(power);
-            FL.setPower(power);
-
-            //Makes the motors to run to the position
-            FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            //Loop to run encoders method
-            while (FL.isBusy() && FR.isBusy() && BL.isBusy() && BR.isBusy())
-            {
-
-            }
-
-            //Stop motors
-            FL.setPower(0);
-            FR.setPower(0);
-            BL.setPower(0);
-            BR.setPower(0);
-
-            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
+        //Stop motors
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
     }
+
+    private void backward(double inch, double power)
+    {
+        //Sets new position for motors
+        int a = (int) (FL.getCurrentPosition() - (inch*cpi));
+        int b = (int) (FR.getCurrentPosition() - (inch*cpi));
+        int c = (int) (BL.getCurrentPosition() - (inch*cpi));
+        int d = (int) (BR.getCurrentPosition() - (inch*cpi));
+
+        FL.setTargetPosition(-a);
+        FR.setTargetPosition(-b);
+        BL.setTargetPosition(-c);
+        BR.setTargetPosition(-d);
+
+        //Sets desired power for motors
+        FL.setPower(power);
+        FR.setPower(power);
+        BL.setPower(power);
+        FL.setPower(power);
+
+        //Makes the motors to run to the position
+        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Loop to run encoders method
+        while (FL.isBusy() && FR.isBusy() && BL.isBusy() && BR.isBusy())
+        {
+            telemetry.addLine("Move Forward");
+            telemetry.addData("Target", "%7d :%7d : %7d : %7d", a, b, c, d);
+            telemetry.addData("Actual", "%7d :%7d : %7d : %7d", FL.getCurrentPosition(), FR.getCurrentPosition(), BL.getCurrentPosition(), BR.getCurrentPosition());
+            telemetry.update();
+        }
+
+        //Stop motors
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
+    }
+
 
     private void movementRL(robotMotion action, double degree,  double power)
     {
@@ -206,12 +201,6 @@ public class EncTest extends LinearOpMode
             FR.setPower(0);
             BL.setPower(0);
             BR.setPower(0);
-
-            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         else if (action == robotMotion.right)
         {
@@ -244,49 +233,39 @@ public class EncTest extends LinearOpMode
             FR.setPower(0);
             BL.setPower(0);
             BR.setPower(0);
-
-            FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
 
     private void linearup(double inch, double power)
     {
-        linear.setTargetPosition((int) (linear.getCurrentPosition() + (inch*cpi)));
+        int a = (int) (linear.getCurrentPosition() + (inch*lcpi));
+        linear.setTargetPosition(a);
         linear.setPower(power);
         linear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while (linear.isBusy())
         {
-
+            telemetry.addLine("Linear up");
+            telemetry.addData("Target", "%7d", a);
+            telemetry.addData("Actual", "%7d", linear.getCurrentPosition());
+            telemetry.update();
         }
-        linear.setPower(0.1);
-
-        FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linear.setPower(0.2);
     }
     private void lineardown(double inch, double power)
     {
-        linear.setTargetPosition((int) (linear.getCurrentPosition() - (inch*cpi)));
+        int a = (int) (linear.getCurrentPosition() - (inch*lcpi));
+        linear.setTargetPosition(a);
         linear.setPower(power);
         linear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while (linear.isBusy())
         {
-
+            telemetry.addLine("Linear up");
+            telemetry.addData("Target", "%7d", a);
+            telemetry.addData("Actual", "%7d", linear.getCurrentPosition());
+            telemetry.update();
         }
         linear.setPower(0);
-
-        FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     private void Clawmovement(int Sleep, robotMotion action, double position)
@@ -317,7 +296,6 @@ public class EncTest extends LinearOpMode
 
 
 }
-
 
 
 
